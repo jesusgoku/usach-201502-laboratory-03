@@ -469,6 +469,22 @@ int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoa
     for (int j = 0; j < pcb->rows; ++j) {
         for (int k = 0; k < pcb->cols; ++k) {
             context = getCellContext(pcb, j, k);
+            // printf(
+            //     "Value: %c - Cycles: %d - Row: %d - Col: %d - ",
+            //     (pcb->board)[j][k].value,
+            //     (pcb->board)[j][k].cycles,
+            //     j,
+            //     k
+            // );
+            // printf(
+            //     "Empty: %d - Non Empty: %d - W: %d - X: %d - Y: %d - Z: %d\n",
+            //     context.empty,
+            //     context.nonEmpty,
+            //     context.w,
+            //     context.x,
+            //     context.y,
+            //     context.z
+            // );
 
             switch ((pcb->board)[j][k].value) {
                 case CELL_W:
