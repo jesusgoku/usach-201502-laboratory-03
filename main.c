@@ -143,6 +143,12 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/**
+ * Write current board to file.
+ *
+ * @param fp  File pointer to file for write board
+ * @param pcb Pointer to CultivationBoard has write
+ */
 void writeCultivationBoardToFile(FILE *fp, PointerCultivationBoard pcb)
 {
     for (int j = 0; j < pcb->rows; ++j) {
@@ -154,6 +160,12 @@ void writeCultivationBoardToFile(FILE *fp, PointerCultivationBoard pcb)
     fprintf(fp, "\n\n");
 }
 
+/**
+ * Print menu on screen.
+ *
+ * @param menu     Options of menu
+ * @param menuSize Number of items on menu
+ */
 void printMenu(MenuOption *menu, int menuSize)
 {
     printf("\n\n");
@@ -163,6 +175,13 @@ void printMenu(MenuOption *menu, int menuSize)
     printf("\n\n");
 }
 
+/**
+ * Read menu option and validate from stdin.
+ *
+ * @param  menu     Options of menu
+ * @param  menuSize Number of items on menu
+ * @return          Option read
+ */
 char readMenuOption(MenuOption *menu, int menuSize)
 {
     char option, trash;
@@ -181,6 +200,14 @@ char readMenuOption(MenuOption *menu, int menuSize)
     return option;
 }
 
+/**
+ * Check if option is valid.
+ *
+ * @param  option   Option to valid
+ * @param  menu     Options of menu
+ * @param  menuSize Number of options on menu
+ * @return          True if option is valid
+ */
 bool isValidOption(char option, MenuOption *menu, int menuSize)
 {
     for (int k = 0; k < menuSize; ++k) {
@@ -192,6 +219,9 @@ bool isValidOption(char option, MenuOption *menu, int menuSize)
     return false;
 }
 
+/**
+ * Wait for user press enter.
+ */
 void pause()
 {
     printf("Press enter to continue ...");
@@ -228,6 +258,13 @@ PointerVectorChar mallocForVectorChar(int size)
     return (PointerVectorChar) malloc(size * sizeof(char));
 }
 
+/**
+ * Memory alloc for Matrix of CultivationBoard.
+ *
+ * @param  rows Number of rows for matrix
+ * @param  cols Number of cols for matrix
+ * @return      Pointer to memory allocated
+ */
 PointerMatrixCultivationBoardCell mallocForMatrixCultivationBoardCell(int rows, int cols)
 {
     PointerMatrixCultivationBoardCell temp;
@@ -240,11 +277,23 @@ PointerMatrixCultivationBoardCell mallocForMatrixCultivationBoardCell(int rows, 
     return temp;
 }
 
+/**
+ * Memory alloc for Vector of CultivationBoard.
+ *
+ * @param  size Size of vector
+ * @return      Pointer to memory allocated
+ */
 PointerVectorCultivationBoardCell mallocForVectorCultivationBoardCell(int size)
 {
     return (PointerVectorCultivationBoardCell) malloc(size * sizeof(CultivationBoardCell));
 }
 
+/**
+ * Free memory allocated for matrix CultivationBoardCell.
+ *
+ * @param m    Pointer to matrix CultivationBoardCell
+ * @param rows Number of rows of matrix CultivationBoardCell
+ */
 void freeMatrixCultivationBoardCell(PointerMatrixCultivationBoardCell m, int rows)
 {
     for (int k = 0; k < rows; ++k) {
@@ -254,6 +303,11 @@ void freeMatrixCultivationBoardCell(PointerMatrixCultivationBoardCell m, int row
     free(m);
 }
 
+/**
+ * Free memory allocated for vector CultivationBoardCell.
+ *
+ * @param v Pointer to vector CultivationBoardCell
+ */
 void freeVectorCultivationBoardCell(PointerVectorCultivationBoardCell v)
 {
     free(v);
@@ -301,6 +355,11 @@ void printMatrixChar(PointerMatrixChar m, int rows, int cols)
     }
 }
 
+/**
+ * Print CultivationBoard.
+ *
+ * @param pcb Pointer to CultivationBoard
+ */
 void printCultivationBoard(PointerCultivationBoard pcb)
 {
     for (int j = 0; j < pcb->rows; ++j) {
@@ -311,6 +370,12 @@ void printCultivationBoard(PointerCultivationBoard pcb)
     }
 }
 
+/**
+ * Read CultivationBoard from file.
+ *
+ * @param  fileName Path of file read
+ * @return          Pointer to CultivationBoard with data read
+ */
 PointerCultivationBoard readBoardFromFile(char *fileName)
 {
     FILE *fp;
@@ -354,6 +419,16 @@ void freePointerCultivationBoard(PointerCultivationBoard pcb)
     free(pcb);
 }
 
+/**
+ * Process reproduction cycle.
+ *
+ * Calculate state cell by cell and copy result in to auxiliar board
+ * Change reference alternate with CultivationBoard and CultivationBoardCopy
+ *
+ * @param  pcbPointer     Pointer to PointerCultivationBoard original
+ * @param  pcbCopyPointer Pointer to PointerCultivationBoard auxiliar
+ * @return                Number of actions ocurring in current cycle
+ */
 int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoard *pcbCopyPointer)
 {
     PointerCultivationBoard pcb, pcbCopy;
@@ -399,6 +474,14 @@ int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoa
     return actions;
 }
 
+/**
+ * Calculate context of one CultivationBoardCell.
+ *
+ * @param  pcb Pointer to CultivationBoardCell
+ * @param  row [description]
+ * @param  col [description]
+ * @return     [description]
+ */
 CellContext getCellContext(PointerCultivationBoard pcb, int row, int col)
 {
     CellContext context;
@@ -436,6 +519,13 @@ CellContext getCellContext(PointerCultivationBoard pcb, int row, int col)
     return context;
 }
 
+/**
+ * Check of cell is death.
+ *
+ * @param  cell    CultivationBoardCell to evaluate
+ * @param  context Context of CultivationBoardCell to evaluate
+ * @return         True if cell is death
+ */
 bool checkDeath(CultivationBoardCell cell, CellContext context)
 {
     switch (cell.value) {
@@ -450,6 +540,13 @@ bool checkDeath(CultivationBoardCell cell, CellContext context)
     }
 }
 
+/**
+ * Check of cell type W is death.
+ *
+ * @param  cell    CultivationBoardCell to evaluate
+ * @param  context Context of CultivationBoardCell to evaluate
+ * @return         True if cell is death
+ */
 bool checkDeathW(CultivationBoardCell cell, CellContext context)
 {
     if (cell.cycles >= 10) {
@@ -463,6 +560,13 @@ bool checkDeathW(CultivationBoardCell cell, CellContext context)
     return false;
 }
 
+/**
+ * Check of cell type X is death.
+ *
+ * @param  cell    CultivationBoardCell to evaluate
+ * @param  context Context of CultivationBoardCell to evaluate
+ * @return         True if cell is death
+ */
 bool checkDeathX(CultivationBoardCell cell, CellContext context)
 {
     if (cell.cycles >= 7) {
@@ -476,6 +580,13 @@ bool checkDeathX(CultivationBoardCell cell, CellContext context)
     return false;
 }
 
+/**
+ * Check of cell type Y is death.
+ *
+ * @param  cell    CultivationBoardCell to evaluate
+ * @param  context Context of CultivationBoardCell to evaluate
+ * @return         True if cell is death
+ */
 bool checkDeathY(CultivationBoardCell cell, CellContext context)
 {
     if (cell.cycles >= 5) {
@@ -489,6 +600,12 @@ bool checkDeathY(CultivationBoardCell cell, CellContext context)
     return false;
 }
 
+/**
+ * Check if cell is born.
+ *
+ * @param  context Context for cell to evaluate
+ * @return         Value of cell born
+ */
 char checkCellIsBorn(CellContext context)
 {
     if (checkCellWIsBorn(context)) {
@@ -502,16 +619,34 @@ char checkCellIsBorn(CellContext context)
     }
 }
 
+/**
+ * Check if cell W is born.
+ *
+ * @param  context Context of cell to evaluate
+ * @return         True if cell W is born
+ */
 bool checkCellWIsBorn(CellContext context)
 {
     return false;
 }
 
+/**
+ * Check if cell X is born.
+ *
+ * @param  context Context of cell to evaluate
+ * @return         True if cell X is born
+ */
 bool checkCellXIsBorn(CellContext context)
 {
     return false;
 }
 
+/**
+ * Check if cell Y is born.
+ *
+ * @param  context Context of cell to evaluate
+ * @return         True if cell Y is born
+ */
 bool checkCellYIsBorn(CellContext context)
 {
     return false;
