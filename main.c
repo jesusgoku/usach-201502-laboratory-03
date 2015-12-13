@@ -1,3 +1,9 @@
+/**
+ * Laboratory 3
+ * 2015-02
+ *
+ * @author Jesús Urrutia
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
