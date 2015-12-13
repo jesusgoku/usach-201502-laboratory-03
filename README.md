@@ -12,4 +12,5 @@ gcc main.c
 Note
 ----
 
-Entrada.txt line ending is Unix type (`\n`)
+- Entrada.txt line ending is Unix type (`\n`)
+- Testing only in OSX
