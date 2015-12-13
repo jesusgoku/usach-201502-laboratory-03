@@ -88,6 +88,11 @@ int main(int argc, char **argv)
     printMatrixChar(matrix, N, N);
     freeMatrixChar(matrix, N);
 
+    if (argc < 2) {
+        printf("Error, specific input file.");
+        exit(1);
+    }
+
     MenuOption menu[MENU_SIZE] = {
         { .option = 'n', .description = "Next cycle" },
         { .option = 'a', .description = "All cycles" },
