@@ -627,6 +627,10 @@ char checkCellIsBorn(CellContext context)
  */
 bool checkCellWIsBorn(CellContext context)
 {
+    if (2 == context.w || 3 == context.w) {
+        return true;
+    }
+
     return false;
 }
 
@@ -638,6 +642,10 @@ bool checkCellWIsBorn(CellContext context)
  */
 bool checkCellXIsBorn(CellContext context)
 {
+    if (1 == context.x && 1 == context.y) {
+        return true;
+    }
+
     return false;
 }
 
@@ -649,5 +657,9 @@ bool checkCellXIsBorn(CellContext context)
  */
 bool checkCellYIsBorn(CellContext context)
 {
+    if (2 == context.y || 3 == context.y) {
+        return true;
+    }
+
     return false;
 }
