@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #define N 2
+#define MENU_SIZE 4
 #define CELL_EMPTY '0'
 #define CELL_W 'W'
 #define CELL_X 'X'
@@ -33,7 +35,16 @@ typedef struct {
     int y;
     int z;
 } CellContext;
+typedef struct {
+    char option;
+    char description[255];
+} MenuOption;
 
+void printMenu(MenuOption *, int);
+char readMenuOption(MenuOption *, int);
+bool isValidOption(char, MenuOption *, int);
+void writeCultivationBoardToFile(FILE *, PointerCultivationBoard);
+void pause();
 PointerMatrixChar mallocForMatrixChar(int, int);
 PointerVectorChar mallocForVectorChar(int);
 void freeMatrixChar(PointerMatrixChar, int);
@@ -69,20 +80,122 @@ int main(int argc, char **argv)
     printMatrixChar(matrix, N, N);
     freeMatrixChar(matrix, N);
 
+    MenuOption menu[MENU_SIZE] = {
+        { .option = 'n', .description = "Next cycle" },
+        { .option = 'a', .description = "All cycles" },
+        { .option = 'f', .description = "Cycles to file" },
+        { .option = 'q', .description = "Quit" },
+    };
+
     PointerCultivationBoard pcb = readBoardFromFile(argv[1]);
     PointerCultivationBoard pcbCopy = readBoardFromFile(argv[1]);
 
     int cycles = 0;
+    char option;
+    bool allCycles = false;
+    FILE *fp;
+
     do {
         cycles++;
+
+        if (NULL != fp) {
+            writeCultivationBoardToFile(fp, pcb);
+            continue;
+        }
+
         printf("\n\nCycle: %d\n\n", cycles);
         printCultivationBoard(pcb);
+
+        if (allCycles) {
+            continue;
+        }
+
+        printMenu(menu, MENU_SIZE);
+        option = readMenuOption(menu, MENU_SIZE);
+
+        switch (option) {
+            case 'a':
+                allCycles = true;
+                break;
+            case 'q':
+                printf("\n\nGood bye ...\n");
+                exit(0);
+                break;
+            case 'f':
+                fp = fopen("Salida.txt", "w");
+                if (NULL == fp) {
+                    printf("\nError, output file is not write.\n");
+                }
+                writeCultivationBoardToFile(fp, pcb);
+                break;
+        }
     } while (reproductionCycle(&pcb, &pcbCopy) > 0 && cycles < 100);
+
+    if (NULL != fp) {
+        fclose(fp);
+    } else {
+        printf("Not more cycles.\n");
+    }
 
     freePointerCultivationBoard(pcb);
     freePointerCultivationBoard(pcbCopy);
 
     return 0;
+}
+
+void writeCultivationBoardToFile(FILE *fp, PointerCultivationBoard pcb)
+{
+    for (int j = 0; j < pcb->rows; ++j) {
+        for (int k = 0; k < pcb->cols; ++k) {
+            fprintf(fp, "%c ", (pcb->board)[j][k].value);
+        }
+        fprintf(fp, "\n");
+    }
+    fprintf(fp, "\n\n");
+}
+
+void printMenu(MenuOption *menu, int menuSize)
+{
+    printf("\n\n");
+    for (int k = 0; k < menuSize; ++k) {
+        printf("%c) %s | ", menu[k].option, menu[k].description);
+    }
+    printf("\n\n");
+}
+
+char readMenuOption(MenuOption *menu, int menuSize)
+{
+    char option, trash;
+    bool isValid;
+
+    do {
+        printf("Enter a option: ");
+        scanf("%c%c", &option, &trash);
+        isValid = isValidOption(option, menu, menuSize);
+
+        if (!isValid) {
+            printf("\nOption: %c is no valid option. Retry ...\n", option);
+        }
+    } while (!isValid);
+
+    return option;
+}
+
+bool isValidOption(char option, MenuOption *menu, int menuSize)
+{
+    for (int k = 0; k < menuSize; ++k) {
+        if (tolower(option) == menu[k].option) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void pause()
+{
+    printf("Press enter to continue ...");
+    getchar();
 }
 
 /**
