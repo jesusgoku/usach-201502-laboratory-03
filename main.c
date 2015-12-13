@@ -9,7 +9,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-#define N 2
 #define MENU_SIZE 4
 #define MAX_CYCLES 5000000
 #define MAX_CYCLES_WITHOUT_ACTIONS 12
@@ -78,16 +77,6 @@ bool checkCellYIsBorn(CellContext);
 
 int main(int argc, char **argv)
 {
-    PointerMatrixChar matrix;
-    matrix = mallocForMatrixChar(N, N);
-    for (int j = 0; j < N; ++j) {
-        for (int k = 0; k < N; ++k) {
-            matrix[j][k] = (char) ('j' + k);
-        }
-    }
-    printMatrixChar(matrix, N, N);
-    freeMatrixChar(matrix, N);
-
     if (argc < 2) {
         printf("Error, specific input file.");
         exit(1);
