@@ -494,13 +494,15 @@ int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoa
                         (pcbCopy->board)[j][k].value = CELL_EMPTY;
                         (pcbCopy->board)[j][k].cycles = 0;
                         actions++;
+                    } else {
+                        (pcbCopy->board)[j][k] = (pcb->board)[j][k];
                     }
                     break;
                 case CELL_EMPTY:
                     (pcbCopy->board)[j][k].value = checkCellIsBorn(context);
                     (pcbCopy->board)[j][k].cycles = 0;
 
-                    if (CELL_EMPTY != (pcb->board)[j][k].value) {
+                    if (CELL_EMPTY != (pcbCopy->board)[j][k].value) {
                         actions++;
                     }
                     break;
