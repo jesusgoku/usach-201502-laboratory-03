@@ -5,6 +5,7 @@
 
 #define N 2
 #define MENU_SIZE 4
+#define MAX_CYCLES 10000
 #define CELL_EMPTY '0'
 #define CELL_W 'W'
 #define CELL_X 'X'
@@ -129,7 +130,7 @@ int main(int argc, char **argv)
                 writeCultivationBoardToFile(fp, pcb);
                 break;
         }
-    } while (reproductionCycle(&pcb, &pcbCopy) > 0 && cycles < 100);
+    } while (reproductionCycle(&pcb, &pcbCopy) > 0 && cycles < MAX_CYCLES);
 
     if (NULL != fp) {
         fclose(fp);
