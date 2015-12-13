@@ -524,13 +524,20 @@ int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoa
  * Calculate context of one CultivationBoardCell.
  *
  * @param  pcb Pointer to CultivationBoardCell
- * @param  row [description]
- * @param  col [description]
- * @return     [description]
+ * @param  row Row coordinate to evaluate context
+ * @param  col Col coordinate to evaluate context
+ * @return     Context of CultivationBoardCell
  */
 CellContext getCellContext(PointerCultivationBoard pcb, int row, int col)
 {
-    CellContext context;
+    CellContext context = {
+        .empty = 0,
+        .nonEmpty = 0,
+        .w = 0,
+        .x = 0,
+        .y = 0,
+        .z = 0
+    };
 
     for (int j = row - 1; j <= row + 1; ++j) {
         for (int k = col - 1; k <= col + 1; ++k) {
