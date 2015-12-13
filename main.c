@@ -107,9 +107,23 @@ int main(int argc, char **argv)
     char option;
     bool allCycles = false;
     FILE *fp;
+    int actions = 0;
+    int cyclesWithoutActions = 0;
 
     do {
         cycles++;
+
+        actions = reproductionCycle(&pcb, &pcbCopy);
+
+        cyclesWithoutActions = (0 == actions)
+            ? cyclesWithoutActions + 1
+            : 0;
+
+        // printf("Actions: %d - Cycles without actions: %d\n", actions, cyclesWithoutActions);
+
+        // if (cyclesWithoutActions > 0) {
+        //     exit(1);
+        // }
 
         if (NULL != fp) {
             writeCultivationBoardToFile(fp, pcb);
