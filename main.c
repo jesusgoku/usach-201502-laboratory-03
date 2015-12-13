@@ -41,7 +41,7 @@ void freeVectorChar(PointerVectorChar);
 void printMatrixChar(PointerMatrixChar, int, int);
 PointerCultivationBoard readBoardFromFile(char *);
 void freePointerCultivationBoard(PointerCultivationBoard);
-void reproductionCycle(PointerCultivationBoard);
+int reproductionCycle(PointerCultivationBoard *, PointerCultivationBoard *);
 PointerMatrixCultivationBoardCell mallocForMatrixCultivationBoardCell(int, int);
 PointerVectorCultivationBoardCell mallocForVectorCultivationBoardCell(int);
 void freeMatrixCultivationBoardCell(PointerMatrixCultivationBoardCell, int);
@@ -70,9 +70,17 @@ int main(int argc, char **argv)
     freeMatrixChar(matrix, N);
 
     PointerCultivationBoard pcb = readBoardFromFile(argv[1]);
-    printCultivationBoard(pcb);
-    reproductionCycle(pcb);
+    PointerCultivationBoard pcbCopy = readBoardFromFile(argv[1]);
+
+    int cycles = 0;
+    do {
+        printf("\n\nCycle: %d\n\n", cycles);
+        printCultivationBoard(pcb);
+        cycles++;
+    } while (reproductionCycle(&pcb, &pcbCopy) > 0 && cycles < 100);
+
     freePointerCultivationBoard(pcb);
+    freePointerCultivationBoard(pcbCopy);
 
     return 0;
 }
@@ -233,34 +241,49 @@ void freePointerCultivationBoard(PointerCultivationBoard pcb)
     free(pcb);
 }
 
-void reproductionCycle(PointerCultivationBoard pcb)
+int reproductionCycle(PointerCultivationBoard *pcbPointer, PointerCultivationBoard *pcbCopyPointer)
 {
+    PointerCultivationBoard pcb, pcbCopy;
     CellContext context;
+    int actions = 0;
+
+    pcb = *pcbPointer;
+    pcbCopy = *pcbCopyPointer;
 
     for (int j = 0; j < pcb->rows; ++j) {
         for (int k = 0; k < pcb->cols; ++k) {
             context = getCellContext(pcb, j, k);
 
             switch ((pcb->board)[j][k].value) {
-                case CELL_Z:
-                    break;
                 case CELL_W:
                 case CELL_X:
                 case CELL_Y:
                     if (checkDeath((pcb->board)[j][k], context)) {
-                        (pcb->board)[j][k].value = CELL_EMPTY;
-                        (pcb->board)[j][k].cycles = 0;
+                        (pcbCopy->board)[j][k].value = CELL_EMPTY;
+                        (pcbCopy->board)[j][k].cycles = 0;
+                        actions++;
                     }
                     break;
                 case CELL_EMPTY:
-                    (pcb->board)[j][k].value = checkCellIsBorn(context);
-                    (pcb->board)[j][k].cycles = 0;
+                    (pcbCopy->board)[j][k].value = checkCellIsBorn(context);
+                    (pcbCopy->board)[j][k].cycles = 0;
+
+                    if (CELL_EMPTY != (pcb->board)[j][k].value) {
+                        actions++;
+                    }
                     break;
+                default:
+                    (pcbCopy->board)[j][k] = (pcb->board)[j][k];
             }
 
-            (pcb->board)[j][k].cycles++;
+            (pcbCopy->board)[j][k].cycles++;
         }
     }
+
+    *pcbPointer = pcbCopy;
+    *pcbCopyPointer = pcb;
+
+    return actions;
 }
 
 CellContext getCellContext(PointerCultivationBoard pcb, int row, int col)
