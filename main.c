@@ -563,7 +563,6 @@ CellContext getCellContext(PointerCultivationBoard pcb, int row, int col)
                     break;
                 case CELL_Z:
                     context.z++;
-                    context.nonEmpty++;
                     break;
             }
         }
