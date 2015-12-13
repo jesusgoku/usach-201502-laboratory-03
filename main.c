@@ -74,9 +74,9 @@ int main(int argc, char **argv)
 
     int cycles = 0;
     do {
+        cycles++;
         printf("\n\nCycle: %d\n\n", cycles);
         printCultivationBoard(pcb);
-        cycles++;
     } while (reproductionCycle(&pcb, &pcbCopy) > 0 && cycles < 100);
 
     freePointerCultivationBoard(pcb);
